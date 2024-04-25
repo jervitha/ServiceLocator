@@ -11,7 +11,7 @@ namespace ServiceLocator.Player
     {
         [SerializeField] private UIService uiService;
         //[SerializeField] private MapService mapService;
-        [SerializeField] private SoundService soundService;
+       // [SerializeField] private SoundService soundService;
         [SerializeField] private PlayerService playerService;
 
         [SerializeField] public PlayerScriptableObject playerScriptableObject;
@@ -108,7 +108,7 @@ namespace ServiceLocator.Player
             if (MapService.Instance.TryGetMonkeySpawnPosition(dropPosition, out Vector3 spawnPosition))
             {
                 SpawnMonkey(monkeyType, spawnPosition);
-                soundService.PlaySoundEffects(SoundType.SpawnMonkey);
+                SoundService.Instance.PlaySoundEffects(SoundType.SpawnMonkey);
             }
         }
 

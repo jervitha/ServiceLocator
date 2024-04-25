@@ -15,7 +15,7 @@ namespace ServiceLocator.Wave
         [SerializeField] private EventService eventService;
      
  
-        [SerializeField] private SoundService soundService;
+      
       
 
         [SerializeField] private WaveScriptableObject waveScriptableObject;
@@ -49,7 +49,7 @@ namespace ServiceLocator.Wave
 
         private void InitializeBloons()
         {
-            bloonPool = new BloonPool(  soundService, waveScriptableObject);
+            bloonPool = new BloonPool( waveScriptableObject);
             activeBloons = new List<BloonController>();
         }
 
@@ -95,7 +95,7 @@ namespace ServiceLocator.Wave
             activeBloons.Remove(bloon);
             if (HasCurrentWaveEnded())
             {
-                soundService.PlaySoundEffects(Sound.SoundType.WaveComplete);
+                SoundService.Instance.PlaySoundEffects(Sound.SoundType.WaveComplete);
                 UIService.Instance.UpdateWaveProgressUI(currentWaveId, waveDatas.Count);
 
                 if(IsLevelWon())
