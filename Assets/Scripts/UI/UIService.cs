@@ -12,8 +12,21 @@ namespace ServiceLocator.UI
     public class UIService : MonoBehaviour
     {
         [SerializeField] private EventService eventService;
-       // [SerializeField] private WaveService waveService;
-       // [SerializeField] private PlayerService playerService;
+        public static UIService Instance { get { return instance; } }
+        private static UIService instance;
+
+        private void Awake()
+        {
+            if (instance == null)
+            {
+                instance = this;
+
+            }
+            else
+            {
+                Destroy(this.gameObject);
+            }
+        }
 
         [Header("Gameplay Panel")]
         [SerializeField] private GameObject gameplayPanel;
