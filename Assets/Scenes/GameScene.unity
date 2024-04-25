@@ -152,10 +152,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ecab4ab9556097469b1cdf5aeb9b5a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerScriptableObject: {fileID: 11400000, guid: ba423c4fbfbefa248b49a627b9e607b6, type: 2}
-  selectedMonkeyView: {fileID: 0}
-  health: 0
-  money: 0
 --- !u!4 &81048209
 Transform:
   m_ObjectHideFlags: 0
@@ -790,6 +786,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerScriptableObject: {fileID: 11400000, guid: ba423c4fbfbefa248b49a627b9e607b6, type: 2}
+  soundScriptableObject: {fileID: 11400000, guid: 1fe1d13385d932c4987f15e4b7d1cc49, type: 2}
+  audioEffects: {fileID: 1495988717}
+  backgroundMusic: {fileID: 2019223321}
 --- !u!4 &2106807022
 Transform:
   m_ObjectHideFlags: 0
