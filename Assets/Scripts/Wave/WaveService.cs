@@ -14,7 +14,7 @@ namespace ServiceLocator.Wave
     {
         [SerializeField] private EventService eventService;
         [SerializeField] private UIService uiService;
-        [SerializeField] private MapService mapService;
+        //[SerializeField] private MapService mapService;
         [SerializeField] private SoundService soundService;
        // [SerializeField] private PlayerService playerService;
 

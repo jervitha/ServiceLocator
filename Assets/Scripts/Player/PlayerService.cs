@@ -10,7 +10,7 @@ namespace ServiceLocator.Player
     public class PlayerService : MonoBehaviour
     {
         [SerializeField] private UIService uiService;
-        [SerializeField] private MapService mapService;
+        //[SerializeField] private MapService mapService;
         [SerializeField] private SoundService soundService;
         [SerializeField] private PlayerService playerService;
 
