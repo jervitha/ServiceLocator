@@ -21,11 +21,26 @@ namespace ServiceLocator.Player
         private List<MonkeyController> activeMonkeys;
         private MonkeyView selectedMonkeyView;
         private int health;
+        public static PlayerService Instance { get { return instance; } }
+        private static PlayerService instance;
+
+        private void Awake()
+        {
+            if(instance==null)
+            {
+                instance = this;
+
+            }
+            else
+            {
+                Destroy(this.gameObject);
+            }
+        }
         public int Money { get; private set; }
 
         private void Start()
         {
-            projectilePool = new ProjectilePool(playerService, playerScriptableObject.ProjectilePrefab, playerScriptableObject.ProjectileScriptableObjects);
+            projectilePool = new ProjectilePool( playerScriptableObject.ProjectilePrefab, playerScriptableObject.ProjectileScriptableObjects);
             InitializeVariables();
         }
 
