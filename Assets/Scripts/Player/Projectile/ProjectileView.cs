@@ -26,7 +26,7 @@ namespace ServiceLocator.Player.Projectile
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if(collision.GetComponent<BloonView>() != null)
+            if (collision.GetComponent<BloonView>() != null)
                 controller.OnHitBloon(collision.GetComponent<BloonView>().Controller);
         }
     }

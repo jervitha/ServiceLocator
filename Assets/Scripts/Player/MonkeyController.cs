@@ -2,17 +2,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using ServiceLocator.Wave.Bloon;
 using ServiceLocator.Player.Projectile;
-using ServiceLocator.Main;
 using ServiceLocator.Sound;
 
 namespace ServiceLocator.Player
 {
     public class MonkeyController
     {
+        // Dependencies:
         private SoundService soundService;
-        private MonkeyView monkeyView;
         private MonkeyScriptableObject monkeyScriptableObject;
         private ProjectilePool projectilePool;
+        private MonkeyView monkeyView;
 
         private List<BloonController> bloonsInRange;
         private float attackTimer;
@@ -20,12 +20,22 @@ namespace ServiceLocator.Player
         public MonkeyController(SoundService soundService, MonkeyScriptableObject monkeyScriptableObject, ProjectilePool projectilePool)
         {
             this.soundService = soundService;
+            this.monkeyScriptableObject = monkeyScriptableObject;
+            this.projectilePool = projectilePool;
+
+            CreateMonkeyView();
+            InitializeVariables();
+        }
+
+        private void CreateMonkeyView()
+        {
             monkeyView = Object.Instantiate(monkeyScriptableObject.Prefab);
             monkeyView.SetController(this);
             monkeyView.SetTriggerRadius(monkeyScriptableObject.Range);
-            
-            this.monkeyScriptableObject = monkeyScriptableObject;
-            this.projectilePool = projectilePool;
+        }
+
+        private void InitializeVariables()
+        {
             bloonsInRange = new List<BloonController>();
             ResetAttackTimer();
         }
@@ -34,7 +44,7 @@ namespace ServiceLocator.Player
 
         public void BloonEnteredRange(BloonController bloon)
         {
-            if (CanAttackBloon(bloon.GetBloonType()))
+            if (bloon != null && CanAttackBloon(bloon.GetBloonType())) // Check if the bloon is not null
                 bloonsInRange.Add(bloon);
         }
 
@@ -48,7 +58,7 @@ namespace ServiceLocator.Player
 
         public void UpdateMonkey()
         {
-            if(bloonsInRange.Count > 0)
+            if (bloonsInRange.Count > 0)
             {
                 RotateTowardsTarget(bloonsInRange[0]);
                 ShootAtTarget(bloonsInRange[0]);
@@ -65,14 +75,19 @@ namespace ServiceLocator.Player
         private void ShootAtTarget(BloonController targetBloon)
         {
             attackTimer -= Time.deltaTime;
-            if(attackTimer <= 0)
+            if (attackTimer <= 0)
             {
-                ProjectileController projectile = projectilePool.GetProjectile(monkeyScriptableObject.projectileType);
-                projectile.SetPosition(monkeyView.transform.position);
-                projectile.SetTarget(targetBloon);
-                soundService.PlaySoundEffects(Sound.SoundType.MonkeyShoot);
+                CreateProjectileForTarget(targetBloon);
+                soundService.PlaySoundEffects(SoundType.MonkeyShoot);
                 ResetAttackTimer();
             }
+        }
+
+        private void CreateProjectileForTarget(BloonController targetBloon)
+        {
+            ProjectileController projectile = projectilePool.GetProjectile(monkeyScriptableObject.projectileType);
+            projectile.SetPosition(monkeyView.transform.position);
+            projectile.SetTarget(targetBloon);
         }
 
         private void ResetAttackTimer() => attackTimer = monkeyScriptableObject.AttackRate;

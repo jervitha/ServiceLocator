@@ -4,8 +4,8 @@ namespace ServiceLocator.Wave.Bloon
 {
     public class BloonView : MonoBehaviour
     {
-        public BloonController Controller { get ; set ; }
-        
+        public BloonController Controller { get; set; }
+
         private SpriteRenderer spriteRenderer;
         private Animator animator;
 
@@ -15,7 +15,18 @@ namespace ServiceLocator.Wave.Bloon
             animator = GetComponent<Animator>();
         }
 
-        private void Update() => Controller.FollowWayPoints();
+        private void Update()
+        {
+            if (Controller != null)
+            {
+                Controller.FollowWayPoints();
+            }
+            else
+            {
+                Debug.LogWarning("BloonView.Controller is null.");
+            }
+        }
+
 
         public void SetRenderer(Sprite spriteToSet) => spriteRenderer.sprite = spriteToSet;
 

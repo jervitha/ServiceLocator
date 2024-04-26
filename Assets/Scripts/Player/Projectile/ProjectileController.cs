@@ -6,14 +6,16 @@ namespace ServiceLocator.Player.Projectile
 {
     public class ProjectileController
     {
+        private PlayerService playerService;
         private ProjectileView projectileView;
         private ProjectileScriptableObject projectileScriptableObject;
 
         private BloonController target;
         private ProjectileState currentState;
 
-        public ProjectileController(ProjectileView projectilePrefab, Transform projectileContainer)
+        public ProjectileController(PlayerService playerService, ProjectileView projectilePrefab, Transform projectileContainer)
         {
+            this.playerService = playerService;
             projectileView = Object.Instantiate(projectilePrefab, projectileContainer);
             projectileView.SetController(this);
         }
@@ -44,12 +46,18 @@ namespace ServiceLocator.Player.Projectile
 
         public void UpdateProjectileMotion()
         {
-            if(target != null && currentState == ProjectileState.ACTIVE)
+            if (target != null && currentState == ProjectileState.ACTIVE)
                 projectileView.transform.Translate(Vector2.left * projectileScriptableObject.Speed * Time.deltaTime, Space.Self);
         }
 
         public void OnHitBloon(BloonController bloonHit)
         {
+            if (bloonHit == null)
+            {
+                Debug.LogWarning("bloonHit is null in OnHitBloon method.");
+                return;
+            }
+
             if (currentState == ProjectileState.ACTIVE)
             {
                 bloonHit.TakeDamage(projectileScriptableObject.Damage);
@@ -58,19 +66,20 @@ namespace ServiceLocator.Player.Projectile
             }
         }
 
+
         public void ResetProjectile()
         {
             target = null;
             projectileView.gameObject.SetActive(false);
-            GameService.Instance.PlayerService.ReturnProjectileToPool(this);
+            playerService.ReturnProjectileToPool(this);
         }
 
         private void SetState(ProjectileState newState) => currentState = newState;
+    }
 
-        private enum ProjectileState
-        {
-            ACTIVE,
-            HIT_TARGET
-        }
+    public enum ProjectileState
+    {
+        ACTIVE,
+        HIT_TARGET
     }
 }

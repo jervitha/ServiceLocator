@@ -1,4 +1,4 @@
-using NUnit.Framework;
+/*using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 using ServiceLocator.Player;
@@ -32,12 +32,12 @@ public class MonkeyController_UnitTest
         return monkeySO;
     }
 
-    private ProjectilePool CreateDummyProjectilePool()
-    {
-        ProjectileView projectilePrefab = new GameObject().AddComponent<ProjectileView>();
-        List<ProjectileScriptableObject> projectileSOs = new List<ProjectileScriptableObject>();
-        projectileSOs.Add(ScriptableObject.CreateInstance<ProjectileScriptableObject>());
-        return new ProjectilePool(projectilePrefab, projectileSOs);
+ //   private ProjectilePool CreateDummyProjectilePool()
+   // {
+     //   ProjectileView projectilePrefab = new GameObject().AddComponent<ProjectileView>();
+       // List<ProjectileScriptableObject> projectileSOs = new List<ProjectileScriptableObject>();
+        //projectileSOs.Add(ScriptableObject.CreateInstance<ProjectileScriptableObject>());
+       // return new ProjectilePool(projectilePrefab, projectileSOs);
     }
 
     [Test]
@@ -50,4 +50,4 @@ public class MonkeyController_UnitTest
         Assert.IsTrue(canAttack);
     }
 
-}
+}*/

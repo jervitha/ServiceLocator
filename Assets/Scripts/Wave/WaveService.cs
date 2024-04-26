@@ -2,61 +2,56 @@ using System.Collections.Generic;
 using UnityEngine;
 using ServiceLocator.Wave.Bloon;
 using System.Threading.Tasks;
-using ServiceLocator.Main;
-using ServiceLocator.Events;
+using ServiceLocator.UI;
 using ServiceLocator.Map;
 using ServiceLocator.Sound;
-using ServiceLocator.UI;
 using ServiceLocator.Player;
+using ServiceLocator.Events;
 
 namespace ServiceLocator.Wave
 {
     public class WaveService
     {
+        // Dependencies:
+        private UIService uiService;
+        private MapService mapService;
+        private PlayerService playerService;
+        private SoundService soundService;
+        private EventService eventService;
+
         private WaveScriptableObject waveScriptableObject;
         private BloonPool bloonPool;
-        private EventService eventService;
-        private UIService uIService;
-        private MapService mapService;
-        private SoundService soundService;
-        private PlayerService playerService;
-
-
 
         private int currentWaveId;
         private List<WaveData> waveDatas;
         private List<BloonController> activeBloons;
 
-        public WaveService(WaveScriptableObject waveScriptableObject)
+        public WaveService(WaveScriptableObject waveScriptableObject) => this.waveScriptableObject = waveScriptableObject;
+
+        public void Init(UIService uiService, MapService mapService, PlayerService playerService, SoundService soundService, EventService eventService)
         {
-            this.waveScriptableObject = waveScriptableObject;
-   
-           
-        }
-        public void Init(EventService eventService,UIService uIService,MapService mapService,SoundService soundService,PlayerService playerService)
-        {
-            this.playerService = playerService;
-            this.eventService = eventService;
-            this.uIService = uIService;
+            this.uiService = uiService;
             this.mapService = mapService;
+            this.playerService = playerService;
             this.soundService = soundService;
+            this.eventService = eventService;
             InitializeBloons();
             SubscribeToEvents();
         }
 
         private void InitializeBloons()
         {
-            bloonPool = new BloonPool(waveScriptableObject,playerService,this,soundService);
+            bloonPool = new BloonPool(this, playerService, soundService, waveScriptableObject);
             activeBloons = new List<BloonController>();
         }
 
-        private void SubscribeToEvents() =>eventService.OnMapSelected.AddListener(LoadWaveDataForMap);
+        private void SubscribeToEvents() => eventService.OnMapSelected.AddListener(LoadWaveDataForMap);
 
         private void LoadWaveDataForMap(int mapId)
         {
             currentWaveId = 0;
             waveDatas = waveScriptableObject.WaveConfigurations.Find(config => config.MapID == mapId).WaveDatas;
-           uIService.UpdateWaveProgressUI(currentWaveId, waveDatas.Count);
+            uiService.UpdateWaveProgressUI(currentWaveId, waveDatas.Count);
         }
 
         public void StarNextWave()
@@ -69,7 +64,7 @@ namespace ServiceLocator.Wave
 
         public async void SpawnBloons(List<BloonType> bloonsToSpawn, Vector3 spawnPosition, int startingWaypointIndex, float spawnRate)
         {
-            foreach(BloonType bloonType in bloonsToSpawn)
+            foreach (BloonType bloonType in bloonsToSpawn)
             {
                 BloonController bloon = bloonPool.GetBloon(bloonType);
                 bloon.SetPosition(spawnPosition);
@@ -93,12 +88,12 @@ namespace ServiceLocator.Wave
             if (HasCurrentWaveEnded())
             {
                 soundService.PlaySoundEffects(Sound.SoundType.WaveComplete);
-                uIService.UpdateWaveProgressUI(currentWaveId, waveDatas.Count);
+                uiService.UpdateWaveProgressUI(currentWaveId, waveDatas.Count);
 
-                if(IsLevelWon())
-                    uIService.UpdateGameEndUI(true);
+                if (IsLevelWon())
+                    uiService.UpdateGameEndUI(true);
                 else
-                   uIService.SetNextWaveButton(true);
+                    uiService.SetNextWaveButton(true);
             }
         }
 
